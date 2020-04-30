@@ -8,6 +8,7 @@ import {
   HttpTestingController
 } from '@angular/common/http/testing';
 import { of } from 'rxjs';
+import { exec } from 'child_process';
 
 
 describe('HeroService', () => {
@@ -46,6 +47,7 @@ describe('HeroService', () => {
          const req = httpMock.expectOne('api/heroes');
          expect(req.request.method).toEqual('GET');
         
+        
          
          req.flush(dummyHeroes); 
         
@@ -64,6 +66,33 @@ describe('HeroService', () => {
      req.flush(silkwoman);
   });
 
-;
+  //NO response when performing a PUT request
+  it('should update a hero',()=>{
+     const mrincredible: Hero = {id:1,name:'mrincredible'};
+     service.updateHero(mrincredible).subscribe(response=>expect(response).toEqual({}));
+     const req = httpMock.expectOne('api/heroes');
+     expect(req.request.method).toEqual('PUT');
+     expect(req.request.body).toEqual(mrincredible);
+     req.flush({});
+  });
+
+  
+  it('should create a hero',()=>{
+    const mrincredible: Hero = {id:1,name:'mrincredible'};
+    service.addHero(mrincredible).subscribe(response => expect(response).toEqual(mrincredible));
+    const req = httpMock.expectOne('api/heroes');
+    expect(req.request.method).toEqual('POST');
+    expect(req.request.body).toEqual(mrincredible);
+    req.flush(mrincredible);
+  });
+  
+
+  it('should delete a hero',()=>{
+    const mrincredible: Hero = {id:1,name:'mrincredible'};
+    service.deleteHero(1).subscribe(response => expect(response).toEqual(mrincredible));
+    const req = httpMock.expectOne('api/heroes/1');
+    expect(req.request.method).toEqual('DELETE');
+    req.flush(mrincredible);
+  })
 
 });
