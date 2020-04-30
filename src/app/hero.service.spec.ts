@@ -43,14 +43,10 @@ describe('HeroService', () => {
            expect(heroList.length).toBe(2);
          });
 
-
          const req = httpMock.expectOne('api/heroes');
          expect(req.request.method).toEqual('GET');
-        
-        
          
          req.flush(dummyHeroes); 
-        
          httpMock.verify();
       } 
   );
@@ -94,5 +90,28 @@ describe('HeroService', () => {
     expect(req.request.method).toEqual('DELETE');
     req.flush(mrincredible);
   })
+
+  it('should search for a hero and find a match',()=>{
+    const batman: Hero = {id:1,name:'batman'};
+    const heroes = [batman];
+    service.searchHeroes('batman').subscribe(response => expect(response.length).toBe(1));
+    const req = httpMock.expectOne('api/heroes/?name=batman');
+    expect(req.request.method).toEqual('GET');
+    req.flush(heroes);
+  });
+
+  it('should be able to find several matches while searching',() =>{
+    const batman: Hero = {id:1, name:'batman'};
+    const batgirl: Hero = {id:2, name: 'batgirl'};
+    const heroes: Hero[] = [batman,batgirl];
+    service.searchHeroes('bat').subscribe(response => {
+      expect(response.length).toBe(2);
+      expect(response[0].name).toBe('batman');
+      expect(response[1].name).toBe('batgirl')
+     });
+     const req = httpMock.expectOne('api/heroes/?name=bat');
+     expect(req.request.method).toEqual('GET');
+     req.flush(heroes);
+  });
 
 });
