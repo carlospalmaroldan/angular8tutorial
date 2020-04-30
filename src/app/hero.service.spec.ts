@@ -31,16 +31,14 @@ describe('HeroService', () => {
     expect(service).toBeTruthy();
   });
   
-  it('should get heroes',
-      ( ) => {
+  it('should get heroes',() => {
 
         const spiderman : Hero={id: 1, name: 'spiderman'}; 
         const ironman : Hero = {id: 1, name: 'ironman'};
         const dummyHeroes = [spiderman,ironman];
-        console.log(dummyHeroes);
+        
 
          service.getHeroes().subscribe(heroList =>{
-           console.log('inside the subscribe'+heroList);
            expect(heroList.length).toBe(2);
          });
 
@@ -51,11 +49,21 @@ describe('HeroService', () => {
          
          req.flush(dummyHeroes); 
         
+         httpMock.verify();
       } 
   );
 
-  afterEach(() => {
-    httpMock.verify();
+  it('should get a single hero with id',()=>{
+
+     const silkwoman: Hero = {id:1,name: 'silkwoman'};
+     service.getHero(1).subscribe(hero => expect(hero.name).toBe('silkwoman'));
+     
+     const req = httpMock.expectOne('api/heroes/1');
+     expect(req.request.method).toEqual('GET');
+
+     req.flush(silkwoman);
   });
+
+;
 
 });
