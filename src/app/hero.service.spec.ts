@@ -60,6 +60,7 @@ describe('HeroService', () => {
      expect(req.request.method).toEqual('GET');
 
      req.flush(silkwoman);
+     httpMock.verify();
   });
 
   //NO response when performing a PUT request
@@ -70,6 +71,7 @@ describe('HeroService', () => {
      expect(req.request.method).toEqual('PUT');
      expect(req.request.body).toEqual(mrincredible);
      req.flush({});
+     httpMock.verify();
   });
 
   
@@ -80,6 +82,7 @@ describe('HeroService', () => {
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual(mrincredible);
     req.flush(mrincredible);
+    httpMock.verify();
   });
   
 
@@ -89,6 +92,7 @@ describe('HeroService', () => {
     const req = httpMock.expectOne('api/heroes/1');
     expect(req.request.method).toEqual('DELETE');
     req.flush(mrincredible);
+    httpMock.verify();
   })
 
   it('should search for a hero and find a match',()=>{
@@ -98,6 +102,7 @@ describe('HeroService', () => {
     const req = httpMock.expectOne('api/heroes/?name=batman');
     expect(req.request.method).toEqual('GET');
     req.flush(heroes);
+    httpMock.verify();
   });
 
   it('should be able to find several matches while searching',() =>{
@@ -112,6 +117,7 @@ describe('HeroService', () => {
      const req = httpMock.expectOne('api/heroes/?name=bat');
      expect(req.request.method).toEqual('GET');
      req.flush(heroes);
+     httpMock.verify();
   });
 
 });
