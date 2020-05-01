@@ -40,6 +40,18 @@ describe('workspace-project App', () => {
     expect( element(by.tagName('app-root app-dashboard app-hero-search')).all(by.className('search-result')).all(by.tagName('a')).get(1).getText()).toBe('Celeritas');
   });
 
+  it('should show initial messages',()=>{
+    page.navigateTo();
+    expect(element(by.tagName('app-root app-messages div')).all(by.tagName('div')).get(0).getText()).toBe('HeroService: fetched heroes');
+  });
+
+  it('should show two messages after clicking on heroes',()=>{
+    page.navigateTo();
+    element(by.linkText('Heroes')).click();
+    expect(element(by.tagName('app-root app-messages div')).all(by.tagName('div')).get(0).getText()).toBe('HeroService: fetched heroes');
+    expect(element(by.tagName('app-root app-messages div')).all(by.tagName('div')).get(1).getText()).toBe('HeroService: fetched heroes');
+  });
+
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);
